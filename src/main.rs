@@ -10,19 +10,28 @@ fn main() {
     let random_number = rand::thread_rng().gen_range(1,10); 
 
     println!("{}", random_number);
-    println!("Input your guess!");
 
-    let mut guess = String::new();
+    loop {
+        println!("Input your guess!");
 
-    io::stdin().read_line(&mut guess)
-        .expect("Failed to read line");
+        let mut guess = String::new();
 
-    let guess: u32 = guess.trim().parse()
-        .expect("Please type a number!");
+        io::stdin().read_line(&mut guess)
+            .expect("Failed to read line");
 
-    match guess.cmp(&random_number) {
-        Ordering::Less => println!("Too small!"),
-        Ordering::Greater => println!("Too large!"),
-        Ordering::Equal => println!("You win!"),
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+        match guess.cmp(&random_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too large!"),
+            Ordering::Equal => {
+                println!("You win!");
+                break;
+            },
+        }
     }
+    
 }
